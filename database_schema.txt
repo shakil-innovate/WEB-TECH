@@ -1,0 +1,37 @@
+-- Update users status enum
+ALTER TABLE users 
+MODIFY COLUMN status ENUM('super_admin', 'admin', 'user') DEFAULT 'user';
+
+-- Update posts table
+ALTER TABLE posts
+ADD COLUMN amount DECIMAL(10, 2) NOT NULL AFTER description,
+ADD COLUMN currency VARCHAR(10) NOT NULL DEFAULT 'USD' AFTER amount,
+ADD COLUMN recipient_name VARCHAR(255) NOT NULL AFTER currency,
+ADD COLUMN recipient_account VARCHAR(255) NOT NULL AFTER recipient_name,
+ADD COLUMN recipient_bank VARCHAR(255) AFTER recipient_account,
+ADD COLUMN assigned_admin_id INT DEFAULT NULL AFTER user_id,
+ADD COLUMN rejection_reason TEXT DEFAULT NULL AFTER status,
+ADD COLUMN completed_at DATETIME DEFAULT NULL AFTER rejection_reason,
+ADD CONSTRAINT fk_assigned_admin FOREIGN KEY (assigned_admin_id) REFERENCES users(id);
+
+-- Update posts status enum
+ALTER TABLE posts
+MODIFY COLUMN status ENUM('pending', 'assigned', 'processing', 'completed', 'rejected') DEFAULT 'pending';
+
+-- Add is_read to messages
+ALTER TABLE messages
+ADD COLUMN is_read BOOLEAN DEFAULT FALSE AFTER message;
+
+-- Create refresh_tokens table
+CREATE TABLE refresh_tokens (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  token TEXT NOT NULL,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Create your first super_admin manually
+INSERT INTO users (name, email, password, status) 
+VALUES ('Super Admin', 'superadmin@example.com', 'WILL_UPDATE_NEXT', 'super_admin');
