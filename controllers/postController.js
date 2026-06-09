@@ -2,26 +2,60 @@ const db = require("../config/db");
 
 // ─── CREATE PAYMENT REQUEST (User) ──────────────────────────
 const createPost = async (req, res) => {
-  const { title, description } = req.body;
+  const {
+    title,
+    description,
+    amount,
+    currency,
+    recipient_name,
+    recipient_account,
+    recipient_bank
+  } = req.body;
+
   const userId = req.user.id;
 
-  if (!title) {
-    return res.status(400).json({ message: "Title is required." });
+  if (
+    !title ||
+    !amount ||
+    !recipient_name ||
+    !recipient_account
+  ) {
+    return res.status(400).json({
+      message: "Missing required fields."
+    });
   }
 
   try {
     await db.query(
-      "INSERT INTO posts (title, description, user_id, status) VALUES (?, ?, ?, 'pending')",
-      [title, description, userId]
+      `INSERT INTO posts
+      (title, description, amount, currency,
+       recipient_name, recipient_account,
+       recipient_bank, user_id, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+      [
+        title,
+        description,
+        amount,
+        currency || "USD",
+        recipient_name,
+        recipient_account,
+        recipient_bank,
+        userId
+      ]
     );
 
-    return res.status(201).json({ message: "Payment request created successfully." });
+    return res.status(201).json({
+      message: "Payment request created successfully."
+    });
   } catch (err) {
-    console.error("Create post error:", err.message);
-    return res.status(500).json({ message: "Server error. Please try again." });
+    console.error(err);
+    return res.status(500).json({
+      message: "Server error."
+    });
   }
 };
 
+//should be recheck
 // ─── GET ALL POSTS (Admin) ───────────────────────────────────
 const getAllPosts = async (req, res) => {
   const { status } = req.query;
