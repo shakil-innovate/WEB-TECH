@@ -1,0 +1,30 @@
+{
+  "name": "web-tech",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000W\u0000E\u0000B\u0000-\u0000T\u0000E\u0000C\u0000H\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shakil-innovate/WEB-TECH.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/shakil-innovate/WEB-TECH/issues"
+  },
+  "homepage": "https://github.com/shakil-innovate/WEB-TECH#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.22.5"
+  }
+}
