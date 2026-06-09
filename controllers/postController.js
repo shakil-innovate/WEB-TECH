@@ -67,9 +67,17 @@ const getAllPosts = async (req, res) => {
       FROM posts 
       JOIN users ON posts.user_id = users.id
     `;
+
     const params = [];
 
-    if (status && (status === "pending" || status === "completed")) {
+    // ✅ EDIT HERE (replace old condition)
+    const allowed = ["pending", "assigned", "processing", "completed", "rejected"];
+
+    if (status && !allowed.includes(status)) {
+      return res.status(400).json({ message: "Invalid status filter" });
+    }
+
+    if (status) {
       query += " WHERE posts.status = ?";
       params.push(status);
     }
@@ -78,6 +86,7 @@ const getAllPosts = async (req, res) => {
 
     const [rows] = await db.query(query, params);
     return res.status(200).json({ posts: rows });
+
   } catch (err) {
     console.error("Get all posts error:", err.message);
     return res.status(500).json({ message: "Server error. Please try again." });

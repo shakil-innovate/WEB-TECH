@@ -12,4 +12,4 @@ router.get("/inbox", verifyToken, getInbox);
 // GET /api/messages/:postId - Get all messages for a specific post
 router.get("/:postId", verifyToken, getMessagesByPost);
 
-module.exports = router;
+module.exports = router;    
