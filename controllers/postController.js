@@ -14,15 +14,8 @@ const createPost = async (req, res) => {
 
   const userId = req.user.id;
 
-  if (
-    !title ||
-    !amount ||
-    !recipient_name ||
-    !recipient_account
-  ) {
-    return res.status(400).json({
-      message: "Missing required fields."
-    });
+  if (!title || !amount || !recipient_name || !recipient_account) {
+    return res.status(400).json({ message: "Missing required fields." });
   }
 
   try {
@@ -44,38 +37,44 @@ const createPost = async (req, res) => {
       ]
     );
 
-    return res.status(201).json({
-      message: "Payment request created successfully."
-    });
+    return res.status(201).json({ message: "Payment request created successfully." });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({
-      message: "Server error."
-    });
+    return res.status(500).json({ message: "Server error." });
   }
 };
 
-//should be recheck
-// ─── GET ALL POSTS (Admin) ───────────────────────────────────
+// ─── GET ALL POSTS (Admin / Super Admin) ─────────────────────
 const getAllPosts = async (req, res) => {
   const { status } = req.query;
 
+  const allowed = ["pending", "assigned", "processing", "completed", "rejected"];
+
+  if (status && !allowed.includes(status)) {
+    return res.status(400).json({ message: "Invalid status filter." });
+  }
+
   try {
     let query = `
-      SELECT posts.id, posts.title, posts.description, posts.post_date, 
-             posts.status, users.name AS user_name, users.email AS user_email 
-      FROM posts 
+      SELECT 
+        posts.id,
+        posts.user_id,
+        posts.title,
+        posts.description,
+        posts.amount,
+        posts.currency,
+        posts.recipient_name,
+        posts.recipient_account,
+        posts.recipient_bank,
+        posts.status,
+        posts.post_date,
+        users.name AS user_name,
+        users.email AS user_email
+      FROM posts
       JOIN users ON posts.user_id = users.id
     `;
 
     const params = [];
-
-    // ✅ EDIT HERE (replace old condition)
-    const allowed = ["pending", "assigned", "processing", "completed", "rejected"];
-
-    if (status && !allowed.includes(status)) {
-      return res.status(400).json({ message: "Invalid status filter" });
-    }
 
     if (status) {
       query += " WHERE posts.status = ?";
@@ -139,8 +138,10 @@ const updatePostStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  if (!status || !["pending", "completed"].includes(status)) {
-    return res.status(400).json({ message: "Valid status (pending or completed) is required." });
+  const allowed = ["pending", "assigned", "processing", "completed", "rejected"];
+
+  if (!status || !allowed.includes(status)) {
+    return res.status(400).json({ message: "Valid status is required." });
   }
 
   try {
