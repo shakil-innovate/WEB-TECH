@@ -1,0 +1,16 @@
+=== USER INFO ===
+"id","name","email","status"
+3,"Shakil","shakil@gmail.com","user"
+
+=== PAYMENT REQUESTS ===
+"id","title","amount","currency","recipient_name","recipient_account","recipient_bank","status","post_date"
+1,"Need payment approval","5000.00","USD","John Doe","123456789","ABC Bank","pending","2026-06-09T16:42:52.000Z"
+2,"khub pain","5000.00","USD","John Doe","123456789","ABC Bank","completed","2026-06-09T18:09:43.000Z"
+
+=== MESSAGES ===
+"id","message","sent_at","sender_name","receiver_name","post_title"
+2,"Hi, your payment request is received and under review.","2026-06-09T18:11:11.000Z","Admin User","Shakil","khub pain"
+3,"Hi,brooooooooo your payment request is received and under review.","2026-06-10T02:25:27.000Z","Admin User","Shakil","khub pain"
+4,"hi","2026-06-10T02:30:09.000Z","Admin User","Shakil","khub pain"
+5,"ok","2026-06-10T02:40:25.000Z","Shakil","Admin User","khub pain"
+6,"paici?","2026-06-10T02:40:57.000Z","Admin User","Shakil","khub pain"

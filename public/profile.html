@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile & Settings — PayBridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .profile-wrapper {
+      padding-top: 64px;
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    .profile-container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+    }
+
+    .profile-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .profile-header .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .profile-header .back-link:hover { color: var(--accent); }
+
+    .profile-header h2 {
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--black);
+      font-family: var(--font-display);
+      margin-bottom: 1.25rem;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-email {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .section-card {
+      background-color: var(--dark-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-card-header .icon {
+      font-size: 1.3rem;
+    }
+
+    .section-card-header h3 {
+      color: var(--white);
+      font-size: 1.05rem;
+      font-family: var(--font-main);
+      font-weight: 600;
+    }
+
+    .section-card-header p {
+      font-size: 0.82rem;
+      margin-top: 0.15rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-box {
+      background-color: var(--dark-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .stat-box .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--font-display);
+    }
+
+    .stat-box .label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .info-item .info-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .info-item .info-value {
+      font-size: 0.95rem;
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .format-toggle {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .format-btn {
+      flex: 1;
+      padding: 0.85rem;
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      background: var(--dark-3);
+      color: var(--text-light);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-main);
+      text-align: center;
+    }
+
+    .format-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .format-btn.selected {
+      border-color: var(--accent);
+      background: rgba(200, 169, 110, 0.1);
+      color: var(--accent);
+    }
+
+    .format-btn .fmt-icon {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    .progress-bar-wrapper {
+      display: none;
+      margin-bottom: 1.25rem;
+    }
+
+    .progress-bar-wrapper.show {
+      display: block;
+    }
+
+    .progress-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background-color: var(--dark-3);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--accent);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .export-history {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .export-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background-color: var(--dark-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      gap: 1rem;
+    }
+
+    .export-item-info {
+      flex: 1;
+    }
+
+    .export-item-info .export-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: 0.2rem;
+    }
+
+    .export-item-info .export-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .danger-zone {
+      border-color: rgba(231, 76, 60, 0.3);
+    }
+
+    .danger-zone .section-card-header {
+      border-bottom-color: rgba(231, 76, 60, 0.2);
+    }
+
+    .danger-warning {
+      background-color: rgba(231, 76, 60, 0.08);
+      border: 1px solid rgba(231, 76, 60, 0.2);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      color: #e74c3c;
+      line-height: 1.6;
+    }
+
+    .danger-warning strong {
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Delete Confirmation Modal */
+    .confirm-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .confirm-modal-overlay.show {
+      display: flex;
+    }
+
+    .confirm-modal {
+      background: var(--dark-2);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .confirm-modal h3 {
+      color: var(--danger);
+      margin-bottom: 1rem;
+      font-family: var(--font-main);
+    }
+
+    .confirm-modal p {
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─────────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="home.html" class="navbar-logo">Pay<span>Bridge</span></a>
+      <div class="navbar-links">
+        <a href="home.html" class="btn btn-outline btn-sm">Home</a>
+        <a href="inbox.html" class="btn btn-outline btn-sm">Inbox</a>
+        <button class="btn btn-outline btn-sm" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── PROFILE WRAPPER ────────────────────────────────────── -->
+  <div class="profile-wrapper">
+    <div class="profile-container">
+
+      <div class="profile-header">
+        <a href="home.html" class="back-link">← Back to Home</a>
+        <div class="profile-avatar" id="profileAvatar">?</div>
+        <div class="profile-name" id="profileName">Loading...</div>
+        <div class="profile-email" id="profileEmail">—</div>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert" id="alertBox"></div>
+
+      <!-- ── ACCOUNT INFO ── -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <span class="icon">👤</span>
+          <div>
+            <h3>Account Information</h3>
+            <p>Your profile and activity summary.</p>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="value" id="statRequests">—</div>
+            <div class="label">Total Requests</div>
+          </div>
+          <div class="stat-box">
+            <div class="value" id="statAmount">—</div>
+            <div class="label">Total Amount</div>
+          </div>
+          <div class="stat-box">
+            <div class="value" id="statRole">—</div>
+            <div class="label">Account Role</div>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Full Name</div>
+            <div class="info-value" id="infoName">—</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Email Address</div>
+            <div class="info-value" id="infoEmail">—</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Account Status</div>
+            <div class="info-value" id="infoStatus">—</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Member Since</div>
+            <div class="info-value" id="infoJoined">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DOWNLOAD MY DATA ── -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <span class="icon">📦</span>
+          <div>
+            <h3>Download My Data</h3>
+            <p>Export all your account data including requests and messages.</p>
+          </div>
+        </div>
+
+        <div class="format-toggle">
+          <button class="format-btn selected" data-format="json" onclick="selectFormat('json')">
+            <span class="fmt-icon">{ }</span>
+            JSON Format
+          </button>
+          <button class="format-btn" data-format="csv" onclick="selectFormat('csv')">
+            <span class="fmt-icon">📊</span>
+            CSV Format
+          </button>
+        </div>
+
+        <div class="progress-bar-wrapper" id="progressWrapper">
+          <div class="progress-bar-label">
+            <span id="progressLabel">Preparing your export...</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="exportBtn" onclick="requestExport()">
+          ⬇ Download My Data
+        </button>
+
+        <!-- Export History -->
+        <div id="exportHistorySection" style="display:none;">
+          <div style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border);">
+            <div style="font-size:0.82rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.75rem;">Export History</div>
+            <div class="export-history" id="exportHistoryList"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── DANGER ZONE ── -->
+      <div class="section-card danger-zone">
+        <div class="section-card-header">
+          <span class="icon">⚠️</span>
+          <div>
+            <h3 style="color:var(--danger);">Danger Zone</h3>
+            <p>Irreversible actions. Proceed with caution.</p>
+          </div>
+        </div>
+
+        <div class="danger-warning">
+          <strong>⚠️ Warning: This action cannot be undone!</strong>
+          Deleting your account will remove all your personal information, payment requests, and message history.
+          You will be logged out immediately and will not be able to recover your data.
+        </div>
+
+        <button class="btn btn-danger" onclick="showDeleteModal()">
+          🗑 Delete My Account
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── DELETE CONFIRMATION MODAL ─────────────────────────── -->
+  <div class="confirm-modal-overlay" id="deleteModalOverlay">
+    <div class="confirm-modal">
+      <h3>⚠️ Delete Account</h3>
+      <p>
+        This will permanently delete your account and all associated data.
+        Please enter your password to confirm.
+      </p>
+
+      <div class="alert" id="deleteAlertBox"></div>
+
+      <div class="form-group">
+        <label class="form-label">Enter your password to confirm</label>
+        <input
+          type="password"
+          id="deletePassword"
+          class="form-control"
+          placeholder="Your password"
+        />
+      </div>
+
+      <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+        <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">
+          Yes, Delete My Account
+        </button>
+        <button class="btn btn-outline" onclick="closeDeleteModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedFormat = 'json';
+    let currentExportId = null;
+    let pollInterval = null;
+
+    // ─── CHECK AUTH ─────────────────────────────────────────────
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!res.ok) { window.location.href = 'login.html'; return null; }
+        return (await res.json()).user;
+      } catch {
+        window.location.href = 'login.html';
+        return null;
+      }
+    }
+
+    // ─── LOAD PROFILE ───────────────────────────────────────────
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/export/profile', { credentials: 'include' });
+        const data = await res.json();
+        const user = data.user;
+        const stats = data.stats;
+
+        // Avatar
+        document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('profileName').textContent = user.name;
+        document.getElementById('profileEmail').textContent = user.email;
+
+        // Stats
+        document.getElementById('statRequests').textContent = stats.total || 0;
+        document.getElementById('statAmount').textContent = stats.total_amount ? `$${parseFloat(stats.total_amount).toFixed(0)}` : '$0';
+        document.getElementById('statRole').textContent = user.status;
+
+        // Info
+        document.getElementById('infoName').textContent = user.name;
+        document.getElementById('infoEmail').textContent = user.email;
+        document.getElementById('infoStatus').innerHTML = `<span class="badge badge-${user.status}">${user.status}</span>`;
+        document.getElementById('infoJoined').textContent = user.created_at ? formatDate(user.created_at) : '—';
+      } catch {
+        showAlert('Failed to load profile.', 'error');
+      }
+    }
+
+    // ─── LOAD EXPORT HISTORY ─────────────────────────────────────
+    async function loadExportHistory() {
+      try {
+        const res = await fetch('/api/export/my', { credentials: 'include' });
+        const data = await res.json();
+        const exports = data.exports || [];
+
+        if (exports.length === 0) return;
+
+        document.getElementById('exportHistorySection').style.display = 'block';
+        const list = document.getElementById('exportHistoryList');
+
+        list.innerHTML = exports.map(exp => `
+          <div class="export-item">
+            <div class="export-item-info">
+              <div class="export-name">
+                ${exp.format.toUpperCase()} Export
+                <span class="badge badge-${exp.status === 'completed' ? 'completed' : exp.status === 'failed' ? 'rejected' : 'pending'}" style="margin-left:0.5rem;">${exp.status}</span>
+              </div>
+              <div class="export-date">Requested: ${formatDateTime(exp.requested_at)}</div>
+            </div>
+            ${exp.status === 'completed' ? `
+              <button class="btn btn-success btn-sm" onclick="downloadExport(${exp.id})">
+                ⬇ Download
+              </button>
+            ` : exp.status === 'failed' ? `
+              <span style="font-size:0.82rem; color:var(--danger);">Failed</span>
+            ` : `
+              <span style="font-size:0.82rem; color:var(--text-muted);">Processing...</span>
+            `}
+          </div>
+        `).join('');
+      } catch {}
+    }
+
+    // ─── SELECT FORMAT ───────────────────────────────────────────
+    function selectFormat(format) {
+      selectedFormat = format;
+      document.querySelectorAll('.format-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.format === format);
+      });
+    }
+
+    // ─── REQUEST EXPORT ──────────────────────────────────────────
+    async function requestExport() {
+      const btn = document.getElementById('exportBtn');
+      btn.disabled = true;
+      btn.textContent = 'Requesting export...';
+
+      showProgress('Preparing your export...', 10);
+
+      try {
+        const res = await fetch('/api/export/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ format: selectedFormat }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok || res.status === 202) {
+          currentExportId = data.export_id;
+          showProgress('Export in progress...', 40);
+          startPolling(currentExportId);
+        } else if (res.status === 409) {
+          // Already in progress
+          currentExportId = data.export_id;
+          showProgress('Previous export in progress...', 60);
+          startPolling(currentExportId);
+        } else {
+          showAlert(data.message || 'Failed to request export.', 'error');
+          hideProgress();
+          btn.disabled = false;
+          btn.textContent = '⬇ Download My Data';
+        }
+      } catch {
+        showAlert('Server error. Please try again.', 'error');
+        hideProgress();
+        btn.disabled = false;
+        btn.textContent = '⬇ Download My Data';
+      }
+    }
+
+    // ─── POLL EXPORT STATUS ──────────────────────────────────────
+    function startPolling(exportId) {
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/export/status/${exportId}`, { credentials: 'include' });
+          const data = await res.json();
+          const exp = data.export;
+
+          if (exp.status === 'processing') {
+            showProgress('Processing your data...', 70);
+          } else if (exp.status === 'completed') {
+            clearInterval(pollInterval);
+            showProgress('Export ready!', 100);
+            setTimeout(() => {
+              hideProgress();
+              downloadExport(exportId);
+              loadExportHistory();
+              const btn = document.getElementById('exportBtn');
+              btn.disabled = false;
+              btn.textContent = '⬇ Download My Data';
+            }, 800);
+          } else if (exp.status === 'failed') {
+            clearInterval(pollInterval);
+            hideProgress();
+            showAlert('Export failed. Please try again.', 'error');
+            const btn = document.getElementById('exportBtn');
+            btn.disabled = false;
+            btn.textContent = '⬇ Download My Data';
+          }
+        } catch {}
+      }, 2000);
+    }
+
+    // ─── DOWNLOAD EXPORT ─────────────────────────────────────────
+    async function downloadExport(exportId) {
+      window.location.href = `/api/export/download/${exportId}`;
+    }
+
+    // ─── PROGRESS BAR ────────────────────────────────────────────
+    function showProgress(label, percent) {
+      document.getElementById('progressWrapper').classList.add('show');
+      document.getElementById('progressLabel').textContent = label;
+      document.getElementById('progressPercent').textContent = `${percent}%`;
+      document.getElementById('progressFill').style.width = `${percent}%`;
+    }
+
+    function hideProgress() {
+      document.getElementById('progressWrapper').classList.remove('show');
+    }
+
+    // ─── DELETE MODAL ────────────────────────────────────────────
+    function showDeleteModal() {
+      document.getElementById('deleteModalOverlay').classList.add('show');
+      document.getElementById('deletePassword').value = '';
+      document.getElementById('deleteAlertBox').className = 'alert';
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModalOverlay').classList.remove('show');
+    }
+
+    async function confirmDelete() {
+      const password = document.getElementById('deletePassword').value;
+      const alertBox = document.getElementById('deleteAlertBox');
+      const btn = document.getElementById('confirmDeleteBtn');
+
+      if (!password) {
+        alertBox.textContent = 'Please enter your password.';
+        alertBox.className = 'alert alert-error show';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Deleting...';
+
+      try {
+        const res = await fetch('/api/export/delete-account', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ password }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alertBox.textContent = 'Account deleted. Redirecting...';
+          alertBox.className = 'alert alert-success show';
+          setTimeout(() => window.location.href = 'index.html', 1500);
+        } else {
+          alertBox.textContent = data.message || 'Failed to delete account.';
+          alertBox.className = 'alert alert-error show';
+          btn.disabled = false;
+          btn.textContent = 'Yes, Delete My Account';
+        }
+      } catch {
+        alertBox.textContent = 'Server error. Please try again.';
+        alertBox.className = 'alert alert-error show';
+        btn.disabled = false;
+        btn.textContent = 'Yes, Delete My Account';
+      }
+    }
+
+    // ─── HELPERS ────────────────────────────────────────────────
+    function showAlert(message, type = 'error') {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.textContent = message;
+      alertBox.className = `alert alert-${type} show`;
+    }
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function formatDateTime(dateStr) {
+      return new Date(dateStr).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    // ─── LOGOUT ─────────────────────────────────────────────────
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      } finally {
+        window.location.href = 'login.html';
+      }
+    });
+
+    // ─── INIT ────────────────────────────────────────────────────
+    window.addEventListener('load', async () => {
+      const user = await checkAuth();
+      if (!user) return;
+      loadProfile();
+      loadExportHistory();
+    });
+  </script>
+
+</body>
+</html>
