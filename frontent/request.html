@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make Payment Request — PayBridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .request-wrapper {
+      padding-top: 64px;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-bottom: 3rem;
+    }
+
+    .request-container {
+      width: 100%;
+      max-width: 680px;
+      padding: 2.5rem 2rem;
+    }
+
+    .request-header {
+      margin-bottom: 2rem;
+    }
+
+    .request-header .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .request-header .back-link:hover {
+      color: var(--accent);
+    }
+
+    .request-header h2 {
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+
+    .request-header p {
+      font-size: 0.9rem;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.75rem 0;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    .currency-input-wrapper {
+      display: flex;
+      gap: 0;
+    }
+
+    .currency-select {
+      width: 100px;
+      border-radius: var(--radius) 0 0 var(--radius);
+      border-right: none;
+    }
+
+    .amount-input {
+      flex: 1;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .submit-area {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─────────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="home.html" class="navbar-logo">Pay<span>Bridge</span></a>
+      <div class="navbar-links">
+        <a href="home.html" class="btn btn-outline btn-sm">Home</a>
+        <a href="inbox.html" class="btn btn-outline btn-sm">Inbox</a>
+        <button class="btn btn-outline btn-sm" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── REQUEST FORM ───────────────────────────────────────── -->
+  <div class="request-wrapper">
+    <div class="request-container">
+
+      <div class="request-header">
+        <a href="home.html" class="back-link">← Back to Home</a>
+        <h2>Make Payment Request</h2>
+        <p>Fill in the details below and our agents will process your international payment.</p>
+      </div>
+
+      <!-- Alert Box -->
+      <div class="alert" id="alertBox"></div>
+
+      <div class="card">
+        <form id="requestForm">
+
+          <!-- Request Info -->
+          <div class="section-label">Request Info</div>
+
+          <div class="form-group">
+            <label class="form-label" for="title">Request Title</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              placeholder="e.g. Amazon subscription payment"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="description">Description <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+            <textarea
+              id="description"
+              class="form-control"
+              placeholder="Add any extra details about this payment..."
+            ></textarea>
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- Payment Details -->
+          <div class="section-label">Payment Details</div>
+
+          <div class="form-group">
+            <label class="form-label" for="amount">Amount</label>
+            <div class="currency-input-wrapper">
+              <select id="currency" class="form-control currency-select">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
+                <option value="AUD">AUD</option>
+                <option value="SGD">SGD</option>
+                <option value="JPY">JPY</option>
+              </select>
+              <input
+                type="number"
+                id="amount"
+                class="form-control amount-input"
+                placeholder="0.00"
+                min="0.01"
+                step="0.01"
+                required
+              />
+            </div>
+          </div>
+
+          <hr class="section-divider" />
+
+          <!-- Recipient Details -->
+          <div class="section-label">Recipient Details</div>
+
+          <div class="form-group">
+            <label class="form-label" for="recipientName">Recipient Name</label>
+            <input
+              type="text"
+              id="recipientName"
+              class="form-control"
+              placeholder="Full name of the recipient"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="recipientAccount">Account / Card Number</label>
+              <input
+                type="text"
+                id="recipientAccount"
+                class="form-control"
+                placeholder="Account or card number"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="recipientBank">Bank Name <span style="color:var(--text-muted); font-weight:400;">(optional)</span></label>
+              <input
+                type="text"
+                id="recipientBank"
+                class="form-control"
+                placeholder="e.g. Chase Bank"
+              />
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="submit-area">
+            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+              Submit Request
+            </button>
+            <a href="home.html" class="btn btn-outline btn-lg">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('requestForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function showAlert(message, type = 'error') {
+      alertBox.textContent = message;
+      alertBox.className = `alert alert-${type} show`;
+      alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideAlert() {
+      alertBox.className = 'alert';
+    }
+
+    // ─── CHECK AUTH ─────────────────────────────────────────────
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!res.ok) {
+          window.location.href = 'login.html';
+          return false;
+        }
+        const data = await res.json();
+        if (data.user.status !== 'user') {
+          window.location.href = 'dashboard.html';
+          return false;
+        }
+        return true;
+      } catch {
+        window.location.href = 'login.html';
+        return false;
+      }
+    }
+
+    // ─── SUBMIT FORM ────────────────────────────────────────────
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const amount = document.getElementById('amount').value;
+      const currency = document.getElementById('currency').value;
+      const recipient_name = document.getElementById('recipientName').value.trim();
+      const recipient_account = document.getElementById('recipientAccount').value.trim();
+      const recipient_bank = document.getElementById('recipientBank').value.trim();
+
+      // Validation
+      if (!title) return showAlert('Request title is required.');
+      if (!amount || parseFloat(amount) <= 0) return showAlert('Please enter a valid amount.');
+      if (!recipient_name) return showAlert('Recipient name is required.');
+      if (!recipient_account) return showAlert('Recipient account is required.');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        const response = await fetch('/api/posts/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            title,
+            description,
+            amount: parseFloat(amount),
+            currency,
+            recipient_name,
+            recipient_account,
+            recipient_bank,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert('Payment request submitted successfully! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 1500);
+        } else {
+          showAlert(data.message || 'Failed to submit request.');
+        }
+      } catch (err) {
+        showAlert('Server error. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Request';
+      }
+    });
+
+    // ─── LOGOUT ─────────────────────────────────────────────────
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      } finally {
+        window.location.href = 'login.html';
+      }
+    });
+
+    // ─── INIT ────────────────────────────────────────────────────
+    window.addEventListener('load', checkAuth);
+  </script>
+
+</body>
+</html>

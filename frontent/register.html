@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — PayBridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─────────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">Pay<span>Bridge</span></a>
+      <div class="navbar-links">
+        <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── REGISTER FORM ──────────────────────────────────────── -->
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <h2>PayBridge</h2>
+        <p>Create your free account</p>
+      </div>
+
+      <!-- Alert Box -->
+      <div class="alert alert-error" id="alertBox"></div>
+
+      <form id="registerForm">
+
+        <div class="form-group">
+          <label class="form-label" for="name">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Create a password"
+            required
+          />
+          <div class="form-text">Minimum 6 characters</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            class="form-control"
+            placeholder="Confirm your password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block mt-2" id="submitBtn">
+          Create Account
+        </button>
+
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function showAlert(message, type = 'error') {
+      alertBox.textContent = message;
+      alertBox.className = `alert alert-${type} show`;
+    }
+
+    function hideAlert() {
+      alertBox.className = 'alert';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      // Client side validation
+      if (!name || !email || !password || !confirmPassword) {
+        return showAlert('All fields are required.');
+      }
+
+      if (password.length < 6) {
+        return showAlert('Password must be at least 6 characters.');
+      }
+
+      if (password !== confirmPassword) {
+        return showAlert('Passwords do not match.');
+      }
+
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating Account...';
+
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert('Registration successful! Redirecting to login...', 'success');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        } else {
+          showAlert(data.message || 'Registration failed. Please try again.');
+        }
+      } catch (err) {
+        showAlert('Server error. Please try again later.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account';
+      }
+    });
+  </script>
+
+</body>
+</html>

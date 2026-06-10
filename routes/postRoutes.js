@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const {
   createPost,
   getAllPosts,
@@ -8,7 +7,6 @@ const {
   getPostById,
   updatePostStatus,
 } = require("../controllers/postController");
-
 const { verifyToken, verifyAdmin, verifyUser } = require("../middleware/auth");
 
 // POST /api/posts/create - User creates a payment request

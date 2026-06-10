@@ -125,5 +125,15 @@
     return res.status(200).json({ message: "Logged out successfully." });
     };
 
-    module.exports = { register, login, refreshToken, logout };
+    const getMe = async (req, res) => {
+    return res.status(200).json({ user: req.user });
+    };
+
+   module.exports = {
+    register,
+    login,
+    refreshToken,
+    logout,
+    getMe
+    };
         
